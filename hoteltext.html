@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WAY Hotel | Self Check-in</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #eef6ff 0%, #f7fbff 50%, #fff8ef 100%);
+      color: #1f2a44;
+    }
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+    }
+    .kiosk {
+      width: 1100px;
+      height: 700px;
+      background: rgba(255,255,255,.96);
+      border-radius: 28px;
+      box-shadow: 0 24px 70px rgba(31,42,68,.18);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 210px 1fr 330px;
+      border: 12px solid #20242b;
+      position: relative;
+    }
+    .sidebar {
+      background: linear-gradient(180deg, #fff7e9, #f5f7fb);
+      padding: 38px 24px;
+      border-right: 1px solid #edf0f5;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 42px;
+      color: #b8893c;
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+    .logo .mark {
+      width: 38px; height: 38px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      background: #d9ad65;
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 21px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 18px;
+      margin: 12px 0;
+      border-radius: 14px;
+      color: #566174;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .nav-item.active {
+      background: linear-gradient(90deg, #c99b4b, #dfb970);
+      color: white;
+      box-shadow: 0 8px 18px rgba(201,155,75,.26);
+    }
+    .main {
+      padding: 48px 50px;
+      position: relative;
+    }
+    .topbar {
+      position: absolute;
+      right: 42px;
+      top: 28px;
+      color: #5f6d82;
+      font-size: 14px;
+    }
+    h1 {
+      font-size: 36px;
+      margin: 24px 0 6px;
+      color: #122140;
+    }
+    .subtitle { font-size: 20px; color: #5b6780; margin-bottom: 34px; }
+    label { display: block; font-size: 13px; font-weight: 700; color: #26324f; margin: 18px 0 8px; }
+    input, select {
+      width: 100%;
+      height: 52px;
+      border: 1px solid #dfe4ee;
+      border-radius: 10px;
+      padding: 0 16px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+    }
+    .btn {
+      width: 100%;
+      height: 54px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 24px;
+      background: linear-gradient(90deg, #bd8b39, #d9ad65);
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .divider { display: flex; align-items: center; gap: 14px; margin: 24px 0; color: #7a8598; }
+    .divider::before, .divider::after { content: ""; height: 1px; background: #e8ecf3; flex: 1; }
+    .scan {
+      height: 52px;
+      border: 1px solid #dfe4ee;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; color: #273552;
+      background: white;
+    }
+    .assistant-panel {
+      background: linear-gradient(180deg, #f7fbff, #fff);
+      padding: 34px 30px;
+      border-left: 1px solid #edf0f5;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .robot {
+      width: 190px;
+      height: 210px;
+      position: relative;
+      margin-top: 40px;
+    }
+    .head {
+      width: 170px; height: 116px;
+      border-radius: 42px;
+      background: linear-gradient(145deg, #f4f8ff, #dfeaf8);
+      margin: 0 auto;
+      box-shadow: inset -8px -8px 18px rgba(111,139,176,.18), 0 14px 28px rgba(31,42,68,.16);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .face {
+      width: 128px; height: 78px;
+      border-radius: 28px;
+      background: #111827;
+      position: relative;
+    }
+    .eye { position:absolute; top:24px; width:18px; height:30px; border-radius:50%; border:5px solid #56d7ff; }
+    .eye.left { left:27px; }
+    .eye.right { right:27px; }
+    .smile { position:absolute; left:50%; bottom:17px; width:42px; height:18px; border-bottom:5px solid #56d7ff; border-radius:0 0 40px 40px; transform:translateX(-50%); }
+    .body {
+      width: 112px; height: 86px;
+      margin: -2px auto 0;
+      border-radius: 34px 34px 28px 28px;
+      background: linear-gradient(145deg, #eef4fb, #cdd9e9);
+      box-shadow: 0 12px 28px rgba(31,42,68,.12);
+    }
+    .bubble {
+      background: white;
+      border-radius: 22px;
+      padding: 22px 24px;
+      box-shadow: 0 12px 32px rgba(31,42,68,.12);
+      font-size: 16px;
+      line-height: 1.45;
+      max-width: 280px;
+      position: absolute;
+      top: 110px;
+      right: 28px;
+    }
+    .bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -18px;
+      right: 64px;
+      border: 10px solid transparent;
+      border-top-color: white;
+    }
+    .eco-card {
+      display: none;
+      position: absolute;
+      left: 245px;
+      top: 86px;
+      width: 570px;
+      background: white;
+      border-radius: 22px;
+      box-shadow: 0 16px 46px rgba(31,42,68,.16);
+      padding: 28px 32px;
+      line-height: 1.45;
+      font-size: 15px;
+      z-index: 10;
+    }
+    .eco-card.show { display: block; }
+    .eco-card h2 { margin: 0 0 16px; font-size: 22px; color: #15284a; }
+    .eco-card ul { padding-left: 20px; margin: 12px 0; }
+    .audio-player {
+      margin-top: 20px;
+      height: 56px;
+      border-radius: 28px;
+      background: linear-gradient(90deg, #eef5ff, #fff4f1);
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      gap: 15px;
+    }
+    .play {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 2px solid #2d70ff;
+      display: flex; align-items:center; justify-content:center;
+      color: #2d70ff;
+      font-size: 18px;
+    }
+    .bars { display: flex; gap: 4px; align-items: center; flex: 1; height: 34px; }
+    .bar { width: 4px; border-radius: 4px; background: #2d70ff; animation: wave 1.2s infinite ease-in-out; }
+    .bar:nth-child(odd) { background: #b44cff; }
+    .bar:nth-child(1){height:14px;animation-delay:.05s}.bar:nth-child(2){height:24px;animation-delay:.1s}.bar:nth-child(3){height:18px;animation-delay:.15s}.bar:nth-child(4){height:30px;animation-delay:.2s}.bar:nth-child(5){height:16px;animation-delay:.25s}.bar:nth-child(6){height:28px;animation-delay:.3s}.bar:nth-child(7){height:20px;animation-delay:.35s}.bar:nth-child(8){height:31px;animation-delay:.4s}.bar:nth-child(9){height:16px;animation-delay:.45s}.bar:nth-child(10){height:25px;animation-delay:.5s}.bar:nth-child(11){height:18px;animation-delay:.55s}.bar:nth-child(12){height:30px;animation-delay:.6s}.bar:nth-child(13){height:22px;animation-delay:.65s}.bar:nth-child(14){height:15px;animation-delay:.7s}.bar:nth-child(15){height:28px;animation-delay:.75s}
+    @keyframes wave { 0%,100% { transform: scaleY(.75); opacity:.65 } 50% { transform: scaleY(1.2); opacity:1 } }
+    .time { color: #1f4ed8; font-weight: 700; }
+    .mode-toggle {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      display: flex;
+      gap: 10px;
+    }
+    .mode-toggle button {
+      border: none;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #1f2a44;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .note {
+      position: absolute;
+      bottom: 32px;
+      left: 50px;
+      right: 50px;
+      color: #65738a;
+      font-size: 14px;
+      text-align: center;
+      border-top: 1px solid #e9edf4;
+      padding-top: 22px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="kiosk">
+      <aside class="sidebar">
+        <div class="logo"><div class="mark">◇</div>WAY<br/>HOTEL</div>
+        <div class="nav-item active">💼 Check-in</div>
+        <div class="nav-item">📅 My Booking</div>
+        <div class="nav-item">🏨 Hotel Info</div>
+        <div class="nav-item">⚙ Services</div>
+        <div class="nav-item">🌐 Language</div>
+      </aside>
+
+      <main class="main">
+        <div class="topbar">10:30 AM &nbsp;&nbsp; 🌐 English ▾</div>
+        <h1>Welcome to WAY Hotel</h1>
+        <div class="subtitle">Self Check-in</div>
+
+        <label>Booking Reference / Confirmation Number</label>
+        <input placeholder="Please enter your booking reference" />
+        <label>Last Name</label>
+        <input placeholder="Please enter your last name" />
+        <label>Room Type (Optional)</label>
+        <select><option>Select room type</option></select>
+        <button class="btn">Find My Booking</button>
+        <div class="divider">or</div>
+        <div class="scan">▣ Scan Passport</div>
+        <div class="note">Please complete check-in to get your room key</div>
+      </main>
+
+      <section class="assistant-panel">
+        <div class="bubble">Hi there! I’m your AI hotel assistant. How can I help make your stay wonderful?</div>
+        <div class="robot">
+          <div class="head"><div class="face"><div class="eye left"></div><div class="eye right"></div><div class="smile"></div></div></div>
+          <div class="body"></div>
+        </div>
+      </section>
+
+      <div id="ecoText" class="eco-card show">
+        <h2>Eco-friendly Stay Reminder</h2>
+        <p><strong>Welcome!</strong> I’m your AI hotel assistant, and I’m here to support your stay.</p>
+        <p>We’re glad to have you with us and hope you enjoy your time at our hotel.</p>
+        <p>As part of our eco-friendly travel initiative, we encourage guests to help protect the environment through small everyday actions.</p>
+        <p>During your stay, please consider:</p>
+        <ul>
+          <li>Turning off lights, air conditioning, and other electrical devices before leaving the room;</li>
+          <li>Saving water whenever possible;</li>
+          <li>Reusing towels and reducing disposable waste.</li>
+        </ul>
+        <p>Thank you for helping us make travel more sustainable.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
